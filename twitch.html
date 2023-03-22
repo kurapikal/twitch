@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-size: 40px;
+        }
+
+        button {
+            width: 30px;
+            font-size: 20px;
+        }
+
+        .reset-btn {
+            width: auto;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container"></div>
+
+    <div id="total"></div><br/>
+
+    <button id="reset" class="reset-btn">Reset</button>
+
+    <script>
+
+        const users = [
+            {"name": "fumi"},
+            {"name": "hayashi"},
+            {"name": "chika"},
+            {"name": "minako"},
+            {"name": "fumiko"},
+            {"name": "kyoko"}
+        ]
+
+        let total = parseInt(localStorage.getItem("total") || 0);
+
+        for(let i=0; i<users.length; i++){
+            document.querySelector("#container").innerHTML += `
+                ${users[i].name}
+                <button id="${i}" class="minus">-</button>
+                <span id="gift${i}">${parseInt(localStorage.getItem(i)) || 0}</span>
+                <button id="${i}" class="plus">+</button>
+                <br/><br/>
+            `;
+        };
+
+        document.querySelector("#total").innerHTML += `
+            Total: <u><b>HK$<span id="total">${parseInt(localStorage.getItem("total")) || 0}</span></b></u>
+        `;
+
+        document.querySelectorAll("button.plus").forEach(result => {
+            result.addEventListener("click", (e) => {
+                const plus = parseInt(document.querySelector(`#gift${e.target.attributes.id.value}`).textContent);
+                document.querySelector(`#gift${e.target.attributes.id.value}`).textContent = plus + 1;
+                localStorage.setItem(e.target.attributes.id.value, document.querySelector(`#gift${e.target.attributes.id.value}`).textContent)
+                document.querySelector("#total").innerHTML = `
+                    Total: <u><b>HK$<span id="total">${total += 1 * 7}</span></b></u>
+                `;
+                localStorage.setItem("total", total);
+            });
+        });
+
+        document.querySelectorAll("button.minus").forEach(result => {
+            result.addEventListener("click", (e) => {
+                const minus = parseInt(document.querySelector(`#gift${e.target.attributes.id.value}`).textContent);
+                document.querySelector(`#gift${e.target.attributes.id.value}`).textContent = minus - 1;
+                localStorage.setItem(e.target.attributes.id.value, document.querySelector(`#gift${e.target.attributes.id.value}`).textContent)
+                document.querySelector("#total").innerHTML = `
+                    Total: <u><b>HK$<span id="total">${total -= 1 * 7}</span></b></u>
+                `;
+                localStorage.setItem("total", total);
+            });
+        });
+
+        document.querySelector("#reset").addEventListener("click", () => {
+            localStorage.clear();
+            location.href = location.href;
+        });
+
+    </script>
+
+</body>
+</html>
